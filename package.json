@@ -1,0 +1,14 @@
+{
+  "name": "symboler",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "serve public"
+  },
+  "author": "Bart Wijnants",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.2.0",
+    "serve": "^11.3.2"
+  }
+}
