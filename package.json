@@ -4,7 +4,7 @@
   "description": "",
   "author": "Bart Wijnants",
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://symboler.vercel.app/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bartw/symboler.git"
