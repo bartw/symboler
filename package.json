@@ -13,7 +13,8 @@
     "url": "https://github.com/bartw/symboler/issues"
   },
   "scripts": {
-    "start": "serve public"
+    "start": "serve public",
+    "test": "node test/test.js"
   },
   "devDependencies": {
     "prettier": "^2.2.0",

@@ -6,17 +6,12 @@ const UP = "ArrowDown";
 const NEUTRAL = "_";
 const ENEMIES = ["#", "@", "&"];
 const RIP = "X";
-const TEXTURES = [
-  ...Array.from(new Array(ENEMIES.length * 5)).map(() => NEUTRAL),
-  ...ENEMIES,
-];
+const TEXTURES = [...Array.from(new Array(ENEMIES.length * 5)).map(() => NEUTRAL), ...ENEMIES];
 
 const getTexture = () => TEXTURES[Math.floor(Math.random() * TEXTURES.length)];
 
 const generateEmptyMatrix = () =>
-  Array.from(new Array(ROWS)).map(() =>
-    Array.from(new Array(COLUMNS)).map(() => NEUTRAL)
-  );
+  Array.from(new Array(ROWS)).map(() => Array.from(new Array(COLUMNS)).map(() => NEUTRAL));
 
 const renderCell = (isPlayerCell, cellValue) => {
   if (!isPlayerCell) {
@@ -35,8 +30,7 @@ const renderMatrix = (container, matrix, position) => {
     const tr = document.createElement("tr");
     row.forEach((cell, columnIndex) => {
       const td = document.createElement("td");
-      td.textContent =
-        columnIndex === 1 && rowIndex === position ? PLAYER : cell;
+      td.textContent = columnIndex === 1 && rowIndex === position ? PLAYER : cell;
       tr.appendChild(td);
     });
 
@@ -50,11 +44,9 @@ const renderMatrix = (container, matrix, position) => {
   container.appendChild(table);
 };
 
-const moveMatrix = (matrix, newColumn) =>
-  matrix.map((row, i) => [...row.slice(1), newColumn[i]]);
+const moveMatrix = (matrix, newColumn) => matrix.map((row, i) => [...row.slice(1), newColumn[i]]);
 
-const generateColumn = () =>
-  Array.from(new Array(ROWS)).map(() => getTexture());
+const generateColumn = () => Array.from(new Array(ROWS)).map(() => getTexture());
 
 const world = document.getElementById("world");
 const newGame = document.getElementById("new-game");
@@ -107,3 +99,12 @@ window.onload = () => {
     start();
   });
 };
+
+if (typeof window === "undefined") {
+  // export stuff to test in node
+  module.exports({
+    generateEmptyMatrix,
+  });
+} else {
+  // use the browser to play games
+}
