@@ -104,7 +104,7 @@ runTest("move UP stops at the edge", () => {
   assertWorld(JSON.stringify(world.show()), expected);
 });
 
-runTest("tick does not change the player position", () => {
+runTest("move FORWARD does not change the player position", () => {
   const aWorld = anEmptyWorld();
   aWorld[8][1] = "$";
   const expected = JSON.stringify(aWorld);
@@ -112,14 +112,14 @@ runTest("tick does not change the player position", () => {
   let world = World.empty();
   assertWorld(JSON.stringify(world.show()), expected);
 
-  world = world.tick();
+  world = world.move("FORWARD");
   assertWorld(JSON.stringify(world.show()), expected);
 
-  world = world.tick();
+  world = world.move("FORWARD");
   assertWorld(JSON.stringify(world.show()), expected);
 });
 
-runTest("tick moves all columns to the left", () => {
+runTest("move FORWARD moves all columns to the left", () => {
   const aWorld = (column) => {
     const w = anEmptyWorld();
 
@@ -138,14 +138,14 @@ runTest("tick moves all columns to the left", () => {
   assertWorld(JSON.stringify(world.show()), expected);
 
   const w2 = aWorld(18);
-  world = world.tick();
+  world = world.move("FORWARD");
 
   w2[8][1] = "$";
   expected = JSON.stringify(w2);
   assertWorld(JSON.stringify(world.show()), expected);
 
   const w3 = aWorld(17);
-  world = world.tick();
+  world = world.move("FORWARD");
 
   w3[8][1] = "$";
   expected = JSON.stringify(w3);

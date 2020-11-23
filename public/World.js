@@ -31,12 +31,11 @@ class World {
     if (direction === "UP") {
       return new World(this._map, this._player === 0 ? 0 : this._player - 1);
     }
+    if (direction === "FORWARD") {
+      const tickedMap = this._map.map((row) => [...row.slice(1), "_"]);
+      return new World(tickedMap, this._player);
+    }
     return this;
-  }
-
-  tick() {
-    const tickedMap = this._map.map((row) => [...row.slice(1), '_']);
-    return new World(tickedMap, this._player);
   }
 }
 
