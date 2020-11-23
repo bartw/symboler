@@ -45,6 +45,10 @@ class World {
     }
     return this;
   }
+
+  hasCollision() {
+    return this._map[this._player][1] !== TEXTURES.neutral;
+  }
 }
 
 if (typeof window === "undefined") {
