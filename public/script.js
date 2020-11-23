@@ -1,8 +1,8 @@
 const DOWN = "ArrowDown";
 const UP = "ArrowUp";
 const LEVEL_SIZE = 40;
-const LEVEL_FACTOR = 0.8;
-const INTERVAL_TIMEOUT = 1000;
+const LEVEL_FACTOR = 0.9;
+const INTERVAL_TIMEOUT = 500;
 
 const levelElement = document.getElementById("level");
 const scoreElement = document.getElementById("score");
