@@ -26,12 +26,23 @@ const runTest = (description, test) => {
 };
 
 assertWorld = (actual, expected) => {
-  if (actual !== expected) {
-    const error = new Error();
-    error.actual = actual;
-    error.expected = expected;
-    throw error;
+  if (actual.length !== expected.length) {
+    throw new Error(`Actual has ${actual.length} rows but expected has ${expected.length} rows.`);
   }
+
+  if (actual.some((columns, rowIndex) => columns.length !== expected[rowIndex].length)) {
+    throw new Error(`The dimensions of actual and expected are not the same.`);
+  }
+
+  actual.forEach((columns, rowIndex) =>
+    columns.forEach((cell, columnIndex) => {
+      if (cell !== expected[rowIndex][columnIndex]) {
+        throw new Error(
+          `Actual at [${rowIndex}][${columnIndex}] is ${cell} but expected at [${rowIndex}][${columnIndex}] is ${expected[rowIndex][columnIndex]}`
+        );
+      }
+    })
+  );
 };
 
 const anEmptyWorld = () => [
@@ -48,75 +59,69 @@ const anEmptyWorld = () => [
 ];
 
 runTest("a new world consists of only empty textures and the player at the start position", () => {
-  const aWorld = anEmptyWorld();
-  aWorld[8][1] = "$";
-  const expected = JSON.stringify(aWorld);
+  const expected = anEmptyWorld();
+  expected[8][1] = "$";
 
   const world = World.empty();
-  const actual = JSON.stringify(world.show());
+  const actual = world.show();
 
   assertWorld(actual, expected);
 });
 
 runTest("move DOWN moves the player visually one row down", () => {
-  const aWorld = anEmptyWorld();
-  aWorld[9][1] = "$";
-  const expected = JSON.stringify(aWorld);
+  const expected = anEmptyWorld();
+  expected[9][1] = "$";
 
   const world = World.empty().move("DOWN");
-  const actual = JSON.stringify(world.show());
+  const actual = world.show();
 
   assertWorld(actual, expected);
 });
 
 runTest("move UP moves the player visually one row up", () => {
-  const aWorld = anEmptyWorld();
-  aWorld[7][1] = "$";
-  const expected = JSON.stringify(aWorld);
+  const expected = anEmptyWorld();
+  expected[7][1] = "$";
 
   const world = World.empty().move("UP");
-  const actual = JSON.stringify(world.show());
+  const actual = world.show();
 
   assertWorld(actual, expected);
 });
 
 runTest("move DOWN stops at the edge", () => {
-  const aWorld = anEmptyWorld();
-  aWorld[9][1] = "$";
-  const expected = JSON.stringify(aWorld);
+  const expected = anEmptyWorld();
+  expected[9][1] = "$";
 
   let world = World.empty().move("DOWN");
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), expected);
 
   world = world.move("DOWN");
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), expected);
 });
 
 runTest("move UP stops at the edge", () => {
-  const aWorld = anEmptyWorld();
-  aWorld[0][1] = "$";
-  const expected = JSON.stringify(aWorld);
+  const expected = anEmptyWorld();
+  expected[0][1] = "$";
 
   let world = World.empty().move("UP").move("UP").move("UP").move("UP").move("UP").move("UP").move("UP").move("UP");
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), expected);
 
   world = world.move("UP");
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), expected);
 });
 
 runTest("move FORWARD does not change the player position", () => {
-  const aWorld = anEmptyWorld();
-  aWorld[8][1] = "$";
-  const expected = JSON.stringify(aWorld);
+  const expected = anEmptyWorld();
+  expected[8][1] = "$";
 
   let world = World.empty();
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), expected);
 
   world = world.move("FORWARD");
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), expected);
 
   world = world.move("FORWARD");
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), expected);
 });
 
 runTest("move FORWARD moves all columns to the left", () => {
@@ -134,20 +139,17 @@ runTest("move FORWARD moves all columns to the left", () => {
   let world = new World(JSON.parse(JSON.stringify(w1)), 8);
 
   w1[8][1] = "$";
-  let expected = JSON.stringify(w1);
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), w1);
 
   const w2 = aWorld(18);
   world = world.move("FORWARD");
 
   w2[8][1] = "$";
-  expected = JSON.stringify(w2);
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), w2);
 
   const w3 = aWorld(17);
   world = world.move("FORWARD");
 
   w3[8][1] = "$";
-  expected = JSON.stringify(w3);
-  assertWorld(JSON.stringify(world.show()), expected);
+  assertWorld(world.show(), w3);
 });
