@@ -21,6 +21,20 @@ body {
   align-items: center;
 }
 
-#new-game {
+#button-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 300px;
   margin-top: 20px;
+}
+
+#up,
+#down {
+  display: block;
+  font-size: 2rem;
+}
+
+#new-game {
+  display: block;
 }
