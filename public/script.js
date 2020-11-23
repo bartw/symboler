@@ -2,6 +2,8 @@ const DOWN = "ArrowDown";
 const UP = "ArrowUp";
 
 const worldElement = document.getElementById("world");
+const downButton = document.getElementById("down");
+const upButton = document.getElementById("up");
 const newGameButton = document.getElementById("new-game");
 
 const render = (world) => {
@@ -30,22 +32,33 @@ let interval;
 const start = () => {
   let world = World.empty();
 
+  const move = (direction) => {
+    world = world.move(direction);
+    checkGameOVer();
+    render(world.show());
+  };
+
+  const moveDown = () => {
+    move("DOWN");
+  };
+  const moveUp = () => {
+    move("UP");
+  };
+
   const onKeyDown = ({ code }) => {
     if (code === DOWN) {
-      world = world.move("DOWN");
-      checkGameOVer();
-      render(world.show());
+      moveDown;
     }
     if (code === UP) {
-      world = world.move("UP");
-      checkGameOVer();
-      render(world.show());
+      moveUp;
     }
   };
 
   const reset = () => {
     window.clearInterval(interval);
     document.body.removeEventListener("keydown", onKeyDown);
+    downButton.removeEventListener("click", moveDown);
+    upButton.removeEventListener("click", moveUp);
   };
 
   reset();
@@ -62,8 +75,9 @@ const start = () => {
     render(world.show());
   }, 1000);
 
-  document.body.removeEventListener("keydown", onKeyDown);
   document.body.addEventListener("keydown", onKeyDown);
+  downButton.addEventListener("click", moveDown);
+  upButton.addEventListener("click", moveUp);
 
   render(world.show());
 };
