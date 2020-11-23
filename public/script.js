@@ -1,42 +1,17 @@
-const ROWS = 10;
-const COLUMNS = 20;
-const PLAYER = "$";
-const DOWN = "ArrowUp";
-const UP = "ArrowDown";
-const NEUTRAL = "_";
-const ENEMIES = ["#", "@", "&"];
-const RIP = "X";
-const TEXTURES = [
-  ...Array.from(new Array(ENEMIES.length * 5)).map(() => NEUTRAL),
-  ...ENEMIES,
-];
+const DOWN = "ArrowDown";
+const UP = "ArrowUp";
 
-const getTexture = () => TEXTURES[Math.floor(Math.random() * TEXTURES.length)];
+const worldElement = document.getElementById("world");
+const newGameButton = document.getElementById("new-game");
 
-const generateEmptyMatrix = () =>
-  Array.from(new Array(ROWS)).map(() =>
-    Array.from(new Array(COLUMNS)).map(() => NEUTRAL)
-  );
-
-const renderCell = (isPlayerCell, cellValue) => {
-  if (!isPlayerCell) {
-    return cellValue;
-  }
-  if (cellValue === NEUTRAL) {
-    return PLAYER;
-  }
-  return RIP;
-};
-
-const renderMatrix = (container, matrix, position) => {
+const render = (world) => {
   const tbody = document.createElement("tbody");
 
-  matrix.forEach((row, rowIndex) => {
+  world.forEach((row) => {
     const tr = document.createElement("tr");
-    row.forEach((cell, columnIndex) => {
+    row.forEach((cell) => {
       const td = document.createElement("td");
-      td.textContent =
-        columnIndex === 1 && rowIndex === position ? PLAYER : cell;
+      td.textContent = cell;
       tr.appendChild(td);
     });
 
@@ -46,64 +21,55 @@ const renderMatrix = (container, matrix, position) => {
   const table = document.createElement("table");
   table.appendChild(tbody);
 
-  container.innerHTML = "";
-  container.appendChild(table);
+  worldElement.innerHTML = "";
+  worldElement.appendChild(table);
 };
 
-const moveMatrix = (matrix, newColumn) =>
-  matrix.map((row, i) => [...row.slice(1), newColumn[i]]);
-
-const generateColumn = () =>
-  Array.from(new Array(ROWS)).map(() => getTexture());
-
-const world = document.getElementById("world");
-const newGame = document.getElementById("new-game");
-
-let matrix;
-let position;
 let interval;
 
-const onKeyDown = ({ code }) => {
-  if (code === DOWN) {
-    position = position === 0 ? 0 : position - 1;
-    if (matrix[position][1] !== NEUTRAL) {
-      window.clearInterval(interval);
-    }
-    renderMatrix(world, matrix, position);
-    return;
-  }
-
-  if (code === UP) {
-    position = position === ROWS - 1 ? ROWS - 1 : position + 1;
-    if (matrix[position][1] !== NEUTRAL) {
-      window.clearInterval(interval);
-    }
-    renderMatrix(world, matrix, position);
-    return;
-  }
-};
-
 const start = () => {
-  matrix = generateEmptyMatrix();
-  position = ROWS - 2;
+  let world = World.empty();
+
+  const onKeyDown = ({ code }) => {
+    if (code === DOWN) {
+      world = world.move("DOWN");
+      checkGameOVer();
+      render(world.show());
+    }
+    if (code === UP) {
+      world = world.move("UP");
+      checkGameOVer();
+      render(world.show());
+    }
+  };
+
+  const reset = () => {
+    window.clearInterval(interval);
+    document.body.removeEventListener("keydown", onKeyDown);
+  };
+
+  reset();
+
+  const checkGameOVer = () => {
+    if (world.hasCollision()) {
+      reset();
+    }
+  };
 
   interval = window.setInterval(() => {
-    matrix = moveMatrix(matrix, generateColumn());
-    if (matrix[position][1] !== NEUTRAL) {
-      window.clearInterval(interval);
-    }
-    renderMatrix(world, matrix, position);
+    world = world.move("FORWARD");
+    checkGameOVer();
+    render(world.show());
   }, 1000);
 
   document.body.removeEventListener("keydown", onKeyDown);
-
   document.body.addEventListener("keydown", onKeyDown);
 
-  renderMatrix(world, matrix, position);
+  render(world.show());
 };
 
 window.onload = () => {
-  newGame.addEventListener("click", () => {
+  newGameButton.addEventListener("click", () => {
     start();
   });
 };
