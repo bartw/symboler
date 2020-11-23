@@ -1,5 +1,8 @@
 const DOWN = "ArrowDown";
 const UP = "ArrowUp";
+const LEVEL_SIZE = 40;
+const LEVEL_FACTOR = 0.8;
+const INTERVAL_TIMEOUT = 1000;
 
 const worldElement = document.getElementById("world");
 const downButton = document.getElementById("down");
@@ -28,6 +31,7 @@ const render = (world) => {
 };
 
 let interval;
+let ticks = 0;
 
 const start = () => {
   let world = World.empty();
@@ -55,6 +59,7 @@ const start = () => {
   };
 
   const reset = () => {
+    ticks = 0;
     window.clearInterval(interval);
     document.body.removeEventListener("keydown", onKeyDown);
     downButton.removeEventListener("click", moveDown);
@@ -69,11 +74,21 @@ const start = () => {
     }
   };
 
-  interval = window.setInterval(() => {
-    world = world.move("FORWARD");
-    checkGameOVer();
-    render(world.show());
-  }, 1000);
+  const startLevel = (intervalTimeout) => {
+    interval = window.setInterval(() => {
+      ticks++;
+
+      world = world.move("FORWARD");
+      checkGameOVer();
+      render(world.show());
+
+      if (!world.hasCollision() && ticks % LEVEL_SIZE === 0) {
+        window.clearInterval(interval);
+        startLevel(intervalTimeout * LEVEL_FACTOR);
+      }
+    }, intervalTimeout);
+  };
+  startLevel(INTERVAL_TIMEOUT);
 
   document.body.addEventListener("keydown", onKeyDown);
   downButton.addEventListener("click", moveDown);
