@@ -11,6 +11,18 @@ body {
   align-items: center;
 }
 
+#meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 300px;
+  margin-bottom: 10px;
+}
+
+#new-game {
+  display: block;
+}
+
 #world {
   background-color: white;
   color: black;

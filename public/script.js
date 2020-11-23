@@ -4,6 +4,8 @@ const LEVEL_SIZE = 40;
 const LEVEL_FACTOR = 0.8;
 const INTERVAL_TIMEOUT = 1000;
 
+const levelElement = document.getElementById("level");
+const scoreElement = document.getElementById("score");
 const worldElement = document.getElementById("world");
 const downButton = document.getElementById("down");
 const upButton = document.getElementById("up");
@@ -75,8 +77,11 @@ const start = () => {
   };
 
   const startLevel = (intervalTimeout) => {
+    levelElement.textContent = `Level ${Math.floor(ticks / LEVEL_SIZE) + 1}`;
+
     interval = window.setInterval(() => {
       ticks++;
+      scoreElement.textContent = `${ticks}`;
 
       world = world.move("FORWARD");
       checkGameOVer();
