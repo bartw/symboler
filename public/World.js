@@ -4,7 +4,15 @@ const COLUMNS = 20;
 const TEXTURES = {
   neutral: "_",
   player: "$",
+  enemies: ["#", "@", "&"],
 };
+
+const DIFFICULTY_TEXTURES = [
+  ...Array.from(new Array(TEXTURES.enemies.length * 10)).map(() => TEXTURES.neutral),
+  ...TEXTURES.enemies,
+];
+
+const aTexture = () => DIFFICULTY_TEXTURES[Math.floor(Math.random() * DIFFICULTY_TEXTURES.length)];
 
 class World {
   constructor(map, player) {
@@ -32,7 +40,7 @@ class World {
       return new World(this._map, this._player === 0 ? 0 : this._player - 1);
     }
     if (direction === "FORWARD") {
-      const tickedMap = this._map.map((row) => [...row.slice(1), "_"]);
+      const tickedMap = this._map.map((row) => [...row.slice(1), aTexture()]);
       return new World(tickedMap, this._player);
     }
     return this;

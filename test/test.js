@@ -25,7 +25,7 @@ const runTest = (description, test) => {
   }
 };
 
-assertWorld = (actual, expected) => {
+assertWorld = (actual, expected, ignoreColumns = []) => {
   if (actual.length !== expected.length) {
     throw new Error(`Actual has ${actual.length} rows but expected has ${expected.length} rows.`);
   }
@@ -36,7 +36,7 @@ assertWorld = (actual, expected) => {
 
   actual.forEach((columns, rowIndex) =>
     columns.forEach((cell, columnIndex) => {
-      if (cell !== expected[rowIndex][columnIndex]) {
+      if (!ignoreColumns.includes(columnIndex) && cell !== expected[rowIndex][columnIndex]) {
         throw new Error(
           `Actual at [${rowIndex}][${columnIndex}] is ${cell} but expected at [${rowIndex}][${columnIndex}] is ${expected[rowIndex][columnIndex]}`
         );
@@ -118,10 +118,10 @@ runTest("move FORWARD does not change the player position", () => {
   assertWorld(world.show(), expected);
 
   world = world.move("FORWARD");
-  assertWorld(world.show(), expected);
+  assertWorld(world.show(), expected, [19]);
 
   world = world.move("FORWARD");
-  assertWorld(world.show(), expected);
+  assertWorld(world.show(), expected, [18, 19]);
 });
 
 runTest("move FORWARD moves all columns to the left", () => {
@@ -145,11 +145,11 @@ runTest("move FORWARD moves all columns to the left", () => {
   world = world.move("FORWARD");
 
   w2[8][1] = "$";
-  assertWorld(world.show(), w2);
+  assertWorld(world.show(), w2, [19]);
 
   const w3 = aWorld(17);
   world = world.move("FORWARD");
 
   w3[8][1] = "$";
-  assertWorld(world.show(), w3);
+  assertWorld(world.show(), w3, [18, 19]);
 });
