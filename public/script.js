@@ -47,10 +47,10 @@ const start = () => {
 
   const onKeyDown = ({ code }) => {
     if (code === DOWN) {
-      moveDown;
+      moveDown();
     }
     if (code === UP) {
-      moveUp;
+      moveUp();
     }
   };
 
